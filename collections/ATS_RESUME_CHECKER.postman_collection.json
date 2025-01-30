@@ -1,0 +1,70 @@
+{
+	"info": {
+		"_postman_id": "f3bd6350-f44c-4e04-b5a2-708ef0fd9b0b",
+		"name": "ATS_RESUME_CHECKER",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40623448"
+	},
+	"item": [
+		{
+			"name": "Resume",
+			"item": [
+				{
+					"name": "Upload Resume",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "resumes",
+									"type": "file",
+									"src": "/Users/acm/Downloads/ATS___Single_Page_Two_Column_Resume_Final.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{localUrl}}/resumes/upload",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"resumes",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Match Job Description",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"resumeIds\": [\"679a653e9e89a5e1b2e44e2a\"],\n    \"jobDescription\": \"Js\"\n    //\"jobDescription\": \"We are hiring full stack developer with 5 years of experience. Specialized in Node, React, Express, AWS, docker, Golang, Kubernetes, secure, API, RestAPI, component, reusable, Java, MERN, Next.js, Express.js, Html, Css, Javascript, standout performer\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localUrl}}/resumes/match",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"resumes",
+								"match"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
