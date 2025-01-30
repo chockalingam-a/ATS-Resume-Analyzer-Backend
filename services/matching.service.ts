@@ -82,9 +82,10 @@ const computeMatchScore = async (
 
   // Weighted scoring: 70% word match, 30% phrase match
   const wordMatchScore = (matchCount / normalizedJobTokens.size) * 70;
-  const phraseMatchScore = (phraseMatchCount / jobPhrases.size) * 30;
+  //const phraseMatchScore = (phraseMatchCount / jobPhrases.size) * 30;
+  const phraseMatchScore = phraseMatchCount > 0 ? 30 : 0; // Give full phrase score if any match
 
-  return Math.min(100, wordMatchScore + phraseMatchScore);
+  return Math.round(Math.min(100, wordMatchScore + phraseMatchScore));
 };
 
 export const matchResumes = async (
