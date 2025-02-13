@@ -62,30 +62,53 @@ const computeMatchScore = async (
 
   // Extract key phrases (bigrams/trigrams)
   const jobPhrases = new Set(extractPhrases(jobDescription));
+  const resumePhrases = new Set(extractPhrases(resumeText));
 
-  let matchCount = 0;
+  let matchedTokens = 0;
   let phraseMatchCount = 0;
+  let numberMatchCount = 0;
 
   // Count word matches (including synonyms)
   for (const token of normalizedResumeTokens) {
     if (jobTokenSynonyms.has(token)) {
-      matchCount++;
+      matchedTokens++;
     }
   }
 
   // Count phrase matches
-  for (const phrase of extractPhrases(resumeText)) {
+  for (const phrase of resumePhrases) {
     if (jobPhrases.has(phrase)) {
       phraseMatchCount++;
     }
   }
 
-  // Weighted scoring: 70% word match, 30% phrase match
-  const wordMatchScore = (matchCount / normalizedJobTokens.size) * 70;
-  const phraseMatchScore = (phraseMatchCount / jobPhrases.size) * 30;
-  // const phraseMatchScore = phraseMatchCount > 0 ? 30 : 0; // Give full phrase score if any match
+  // Number matching (partial match for phone numbers, years, etc.)
+  const resumeNumbers = resumeText.match(/\d+/g) || [];
+  const jobNumbers = jobDescription.match(/\d+/g) || [];
 
-  return Math.round(Math.min(100, wordMatchScore + phraseMatchScore));
+  for (const jobNum of jobNumbers) {
+    if (resumeNumbers.some((resNum) => resNum.includes(jobNum))) {
+      numberMatchCount++;
+    }
+  }
+
+  const totalJobKeywords = normalizedJobTokens.size;
+  const matchRatio = matchedTokens / totalJobKeywords;
+
+  // If **all** job description keywords are present, return 100%
+  if (matchRatio === 1) {
+    return 100;
+  }
+
+  // Weighted scoring system
+  const wordMatchScore = matchRatio * 80; // Now contributes up to 80%
+  const phraseMatchScore = phraseMatchCount > 0 ? 15 : 0;
+  const numberMatchScore = numberMatchCount > 0 ? 5 : 0;
+
+
+  return Math.round(
+    Math.min(100, wordMatchScore + phraseMatchScore + numberMatchScore)
+  );
 };
 
 export const matchResumes = async (

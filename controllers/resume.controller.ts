@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Resume from "../models/resume.model";
 import { matchResumes } from "../services/matching.service";
-import { parsePDF, parseDOCX } from "../utils/parseResume";
-import fs from "fs";
+import { parseResume } from "../utils/parseResume";
 
 export const uploadResume = async (
   req: Request,
@@ -27,11 +26,7 @@ export const uploadResume = async (
     const uploadedResumes = [];
 
     for (const file of files) {
-      const dataBuffer = fs.readFileSync(file.path);
-      const content =
-        file.mimetype === "application/pdf"
-          ? await parsePDF(dataBuffer)
-          : await parseDOCX(dataBuffer);
+      const content = await parseResume(file.path, file.mimetype);
       const s3Key = `resumes/${Date.now()}_${file.originalname}`;
       //await uploadFile(file, s3Key);
 
