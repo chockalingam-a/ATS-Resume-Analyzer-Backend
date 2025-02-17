@@ -95,7 +95,7 @@ const computeMatchScore = async (
   const totalJobKeywords = normalizedJobTokens.size;
   const matchRatio = matchedTokens / totalJobKeywords;
 
-  // If **all** job description keywords are present, return 100%
+  // If all job description keywords are present, return 100%
   if (matchRatio === 1) {
     return 100;
   }
@@ -104,11 +104,12 @@ const computeMatchScore = async (
   const wordMatchScore = matchRatio * 80; // Now contributes up to 80%
   const phraseMatchScore = phraseMatchCount > 0 ? 15 : 0;
   const numberMatchScore = numberMatchCount > 0 ? 5 : 0;
-
-
-  return Math.round(
-    Math.min(100, wordMatchScore + phraseMatchScore + numberMatchScore)
+  const finalScore = Math.min(
+    100,
+    wordMatchScore + phraseMatchScore + numberMatchScore
   );
+
+  return Math.round(finalScore);
 };
 
 export const matchResumes = async (
@@ -118,10 +119,20 @@ export const matchResumes = async (
   const resumes = await Resume.find({ _id: { $in: resumeIds } });
 
   const matchResults = await Promise.all(
-    resumes.map(async (resume) => ({
-      resumeId: resume._id,
-      matchScore: await computeMatchScore(resume.content, jobDescription),
-    }))
+    resumes.map(async (resume) => {
+      // Append links to resume text before scoring
+      const enrichedResumeText = `${resume.content} ${resume.links.join(" ")}`;
+      const matchScore = await computeMatchScore(
+        enrichedResumeText,
+        jobDescription
+      );
+
+      return {
+        resumeId: resume._id,
+        fileName: resume.filename,
+        matchScore,
+      };
+    })
   );
 
   return matchResults.sort((a, b) => b.matchScore - a.matchScore);
