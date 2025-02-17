@@ -33,7 +33,8 @@ export const uploadResume = async (
       const resume = new Resume({
         filename: file.originalname,
         s3Key,
-        content,
+        content: content.text,
+        links: content.links,
       });
       await resume.save();
 
