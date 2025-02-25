@@ -1,5 +1,6 @@
 import natural from "natural";
 import Resume from "../models/resume.model";
+import { calculateResumeScore } from "./transformer.service";
 
 const tokenizer = new natural.WordTokenizer();
 const stemmer = natural.PorterStemmer; // Stemming for normalization
@@ -122,7 +123,7 @@ export const matchResumes = async (
     resumes.map(async (resume) => {
       // Append links to resume text before scoring
       const enrichedResumeText = `${resume.content} ${resume.links.join(" ")}`;
-      const matchScore = await computeMatchScore(
+      const matchScore = await calculateResumeScore(
         enrichedResumeText,
         jobDescription
       );

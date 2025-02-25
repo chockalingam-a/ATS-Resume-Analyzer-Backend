@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Resume from "../models/resume.model";
 import { matchResumes } from "../services/matching.service";
-import { parseResume } from "../utils/parseResume";
+import { parseResume } from "../utils/parseDocuments";
 
 export const uploadResume = async (
   req: Request,

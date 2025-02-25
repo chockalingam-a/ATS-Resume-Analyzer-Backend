@@ -1,7 +1,6 @@
 import mammoth from "mammoth";
 import textract from "textract";
 import fs from "fs";
-
 import { getDocument } from "pdfjs-dist";
 import { parseStringPromise } from "xml2js";
 
@@ -31,13 +30,6 @@ export const parsePDF = async (
 
   return { text, links };
 };
-
-/*
-export const parseDOCX = async (buffer: Buffer): Promise<string> => {
-  const result = await mammoth.extractRawText({ buffer });
-  return result.value;
-};
-**/
 
 export const parseDOCX = async (
   buffer: Buffer

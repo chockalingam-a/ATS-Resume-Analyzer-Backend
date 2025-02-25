@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@xenova/transformers": "^2.17.2",
     "aws-sdk": "^2.1692.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -22,6 +23,7 @@
     "multer-s3": "^3.0.1",
     "natural": "^8.0.1",
     "pdfjs-dist": "^4.10.38",
+    "stopword": "^3.1.4",
     "textract": "^2.5.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
@@ -31,6 +33,7 @@
     "@types/lodash": "^4.17.15",
     "@types/multer": "^1.4.12",
     "@types/multer-s3": "^3.0.3",
+    "@types/stopword": "^2.0.3",
     "@types/textract": "^2.4.5",
     "@types/xml2js": "^0.4.14",
     "nodemon": "^3.1.9"
