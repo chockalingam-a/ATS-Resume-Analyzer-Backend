@@ -5,7 +5,10 @@ import { preprocessText, cosineSimilarity } from "../utils/textProcess";
 let embedder: any;
 
 const initializeEmbedder = async () => {
-  embedder = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
+  const MINILM_MODEL = "Xenova/all-MiniLM-L6-v2";
+  const BERT_MODEL = "Xenova/bert-base-uncased";
+
+  embedder = await pipeline("feature-extraction", BERT_MODEL);
 };
 
 // Function to calculate keyword-based score
