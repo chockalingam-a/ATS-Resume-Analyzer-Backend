@@ -1,6 +1,8 @@
 import natural from "natural";
 import { removeStopwords } from "stopword";
 
+const wordnet = new natural.WordNet();
+
 // Abbreviation mapping
 const abbreviationMap: { [key: string]: string } = {
   js: "javascript",
@@ -11,17 +13,29 @@ const abbreviationMap: { [key: string]: string } = {
 };
 
 // Function to expand abbreviations
-export const expandAbbreviations = (text: string): string => {
-  const words = text.split(" ");
-  return words
-    .map((word) => abbreviationMap[word.toLowerCase()] || word)
-    .join(" ");
+
+const expandAbbreviations = async (word: string): Promise<string> => {
+  // Check static mapping first
+  if (abbreviationMap[word.toLowerCase()]) {
+    return abbreviationMap[word.toLowerCase()];
+  }
+
+  // Fallback to WordNet
+  return new Promise((resolve, reject) => {
+    wordnet.lookup(word.toLowerCase(), (results) => {
+      if (results && results.length > 0) {
+        resolve(results[0].lemma);
+      } else {
+        resolve(word);
+      }
+    });
+  });
 };
 
 // Function to preprocess text
-export const preprocessText = (text: string): string[] => {
+export const preprocessText = async (text: string): Promise<string[]> => {
   // Expand abbreviations
-  text = expandAbbreviations(text);
+  text = await expandAbbreviations(text);
 
   // Convert to lowercase
   text = text.toLowerCase();
@@ -38,7 +52,7 @@ export const preprocessText = (text: string): string[] => {
   tokens = tokens.map((token) => stemmer.stem(token));
 
   return tokens;
-}
+};
 
 // Function to calculate cosine similarity
 export const cosineSimilarity = (vecA: number[], vecB: number[]): number => {

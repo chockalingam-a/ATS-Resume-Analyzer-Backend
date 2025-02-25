@@ -39,8 +39,8 @@ export const calculateResumeScore = async (
   }
 
   // Preprocess the texts
-  const resumeTokens = preprocessText(resumeText);
-  const jobDescriptionTokens = preprocessText(jobDescription);
+  const resumeTokens = await preprocessText(resumeText);
+  const jobDescriptionTokens = await preprocessText(jobDescription);
 
   // If job description is a single keyword, enforce exact matching
   if (jobDescriptionTokens.length === 1) {
